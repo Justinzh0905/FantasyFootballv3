@@ -17,8 +17,11 @@ const router = createBrowserRouter([
       {path: "rankings", element: <StatTable />},
       {path: "research", element: <GraphView />}
     ]
+  }],
+  {
+    basename: '/football'
   }
-])
+)
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
