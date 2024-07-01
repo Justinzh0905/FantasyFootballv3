@@ -7,21 +7,6 @@ client = boto3.client('dynamodb')
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table('Player-Stats')
 
-def getstats(players, stat):
-    if not type(players) is list:
-        players = [players]
-
-    stats = {}
-    for player in players:
-        response = db_json.loads(table.query(
-            KeyConditionExpression=Key('Player').eq(player),
-            ProjectionExpression=f'#y, {stat}',
-            ExpressionAttributeNames = {'#y': 'Year'}
-        ))
-
-        stats[player] = response['Items']
-
-    return json.dumps(stats)
 
 def lambda_handler(event, context):
     print('start')
@@ -31,19 +16,30 @@ def lambda_handler(event, context):
 
     try:
         if event['routeKey'] == "GET /stat":
-
-            print('query string: ' + event['queryStringParameters']['players'])
-            for player in event['queryStringParameters']['players'].split(','):
-                response =  table.query(
-                    KeyConditionExpression=Key('Player').eq(player),
-                    ProjectionExpression=f'#y, {event['queryStringParameters']['stat']}',
-                    ExpressionAttributeNames = {'#y': 'Year'}
+            players = event['queryStringParameters']['players'].split(',')
+            print('query string: ' ', '.join(players))
+            
+            #return all player names 
+            if players[0] == "All":
+                response = table.scan(
+                    ProjectionExpression="Player"
                 )
+                names = db_json.loads(response["Items"])
+                names = [row['Player'] for row in names]
+                body['Players'] = sorted(list(set(names)))
+                
+            else:
+                for player in players:
+                    response =  table.query(
+                        KeyConditionExpression=Key('Player').eq(player),
+                        ProjectionExpression=f'#y, {event['queryStringParameters']['stat']}',
+                        ExpressionAttributeNames = {'#y': 'Year'}
+                    )
 
-                print(response)
-                stats = db_json.loads(response["Items"])
-                stats = {row['Year']: row[event['queryStringParameters']['stat']] for row in stats}
-                body[player] = stats
+                    print(response)
+                    stats = db_json.loads(response["Items"])
+                    stats = {row['Year']: row[event['queryStringParameters']['stat']] for row in stats}
+                    body[player] = stats
     except KeyError:
         statusCode = 400
         body = 'Unsupported route: ' + event['routeKey']

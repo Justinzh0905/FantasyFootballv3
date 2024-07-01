@@ -1,14 +1,17 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import {LineChart} from '@mui/x-charts/LineChart'
-import { Autocomplete, TextField, Grid } from '@mui/material';
+import { Autocomplete, TextField, Grid, CircularProgress } from '@mui/material';
 
 
 
 const sample = ['Stefon Diggs', 'Derrick Henry', 'Aaron Jones', 'Aaron Rodgers', 'Josh Allen']
 const stats = ['PPR','TD','G','GS','Cmp','PassAtt','PassYds','PassTD','Int','RushAtt','RushYds','Y/A','RushTD','Tgt','Rec','RecYds','Y/R','RecTD','Fmb','FL','PPR','VBD','PosRank']
 function Selector(props) {
-    const { numPlayers, setNumPlayers, players, setPlayers, stat, setStat} = props
+    const [names, setNames] = useState([])
+    const { numPlayers, setNumPlayers, players, setPlayers, setStat} = props
+
+    let loading = names.length === 0
     function updatePlayers(pos, value) {
         let newPlayers = [...players]
         newPlayers[pos] = value
@@ -23,18 +26,46 @@ function Selector(props) {
         }
 
     }
+
+
+    //effect for gathering all player names from api 
+    useEffect(() => {
+        async function get_names() {
+            const response = await fetch("https://api.justin-zhai.com/stat?" + new URLSearchParams({
+                    players: 'All'
+            }).toString())
+            const data = await response.json()
+            setNames(data['Players'])
+
+        }
+
+        get_names()
+    }, [])
     
     return (
         <Grid container spacing="2">
-            <Grid container xs={12}>
+            <Grid container >
                 {[...Array(numPlayers).keys()].map((i) => {
                     return (
-                        <Grid item xs={3}>
+                        <Grid key={i} item xs={3}>
                         <Autocomplete 
                             readOnly={(numPlayers !== i + 2 || players.length === 4) && i !== 3 && numPlayers !==1 && numPlayers !== i + 1}
                             onChange={(e, value) => updatePlayers(i, value)}
-                            options = {sample}
-                            renderInput={(params) => <TextField {...params} label="Player" variant="standard" />}
+                            options = {names}
+                            loading = {loading}
+                            renderInput={(params) => 
+                                <TextField 
+                                    {...params} label="Player" variant="standard" 
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        endAdornment: (
+                                          <React.Fragment>
+                                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                            {params.InputProps.endAdornment}
+                                          </React.Fragment>
+                                        ),
+                                      }}
+                                />}
                         />
                         </Grid>
                     )
@@ -42,7 +73,7 @@ function Selector(props) {
             </Grid>
             <Grid item xs={3}>
                 <Autocomplete 
-                    onChange={(e, value) => props.setStat(value)}
+                    onChange={(e, value) => setStat(value)}
                     options = {stats}
                     renderInput={(params) => <TextField {...params} label="Choose Stat" variant="standard"/>}
                 />
@@ -89,6 +120,8 @@ export default function GraphView() {
         setYdata(yvalues)
     }
 
+
+    //effect for loading stats from api 
     useEffect(() => {
 
         async function get_data() {
@@ -108,7 +141,7 @@ export default function GraphView() {
         }
 
         get_data()
-    })
+    }, [players, stat])
     return (
         <>
         <Selector numPlayers={numPlayers} setNumPlayers={setNumPlayers} players={players} setPlayers={setPlayers} setStat={setStat}/>
