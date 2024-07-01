@@ -18,9 +18,6 @@ const router = createBrowserRouter([
       {path: "research", element: <GraphView />}
     ]
   }],
-  {
-    basename: '/football'
-  }
 )
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

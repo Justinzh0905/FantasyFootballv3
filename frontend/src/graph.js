@@ -81,7 +81,7 @@ export default function GraphView() {
 
         async function get_data() {
             if (stat && (players.length !== 0)) {
-                const response = await fetch("https://football.justin-zhai.com/stat?" + new URLSearchParams({
+                const response = await fetch("https://api.justin-zhai.com/stat?" + new URLSearchParams({
                         players: players,
                         stat: stat
                 }).toString())
