@@ -1,58 +1,120 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import {LineChart} from '@mui/x-charts/LineChart'
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, Grid } from '@mui/material';
 
 
-function update_data(json, setX, setY) {
-    for(const [player, data] of Object.entries(json)) {
-        const xvalues = data.map( elem => elem['Year'])
-        const yvalues = data.map( elem => elem['RecYds'])
-        setX(xvalues)
-        setY(yvalues)
-    }
-}
 
 const sample = ['Stefon Diggs', 'Derrick Henry', 'Aaron Jones', 'Aaron Rodgers', 'Josh Allen']
+const stats = ['PPR','TD','G','GS','Cmp','PassAtt','PassYds','PassTD','Int','RushAtt','RushYds','Y/A','RushTD','Tgt','Rec','RecYds','Y/R','RecTD','Fmb','FL','PPR','VBD','PosRank']
 function Selector(props) {
+
+    function updatePlayers(pos, value) {
+        let newPlayers = [...props.players]
+        newPlayers[pos] = value
+        props.setPlayers(newPlayers)
+    }
     
     return (
-        <Autocomplete 
-            onChange={(e, value) => props.setP1(value)}
-            options = {sample}
-            renderInput={(params) => <TextField {...params} label="Player" />}
-        />
+        <Grid container spacing="1">
+            <Grid item xs={6}>
+                <Autocomplete 
+                    onChange={(e, value) => updatePlayers(0, value)}
+                    options = {sample}
+                    renderInput={(params) => <TextField {...params} label="Player" variant="standard" />}
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <Autocomplete 
+                    onChange={(e, value) => updatePlayers(1, value)}
+                    options = {sample}
+                    renderInput={(params) => <TextField {...params} label="Player" variant="standard" />}
+                />
+            </Grid>
+            <Grid item xs={4}>
+                <Autocomplete 
+                    onChange={(e, value) => props.setStat(value)}
+                    options = {stats}
+                    renderInput={(params) => <TextField {...params} label="Choose Stat" variant="standard"/>}
+                />
+            </Grid>
+        </Grid>
     )
 }
 export default function GraphView() {
-    const [player1, setPlayer1] = useState('Stefon Diggs')
-    const [xdata, setXdata] = useState([1, 2, 3, 5, 8, 10])
-    const [ydata, setYdata] = useState([2, 5.5, 2, 8.5, 1.5, 5])
+    const [players, setPlayers] = useState([])
+    const [stat, setStat] = useState('')
+    const [xdata, setXdata] = useState([])
+    const [ydata, setYdata] = useState({})
+
+    function update_data(json) {
+
+        let yvalues = {}
+        //x axis value of last 5 years 
+        const currYear = new Date().getFullYear()
+        const years = Array.from({length: 5}, (_, i) => i + currYear - 5)
+
+
+        for(const [player, data] of Object.entries(json)) {
+            let stats = []
+            //fill missing year data will null
+
+            for (const year of years) {
+                if (data[year]) {
+                    stats.push(data[year])
+                } else {
+                    stats.push(null)
+                }
+            }
+
+            
+            yvalues[player] = stats
+        }
+
+        //transform x axis values to date form 
+        const xvalues = years.map( elem => new Date(elem, 0, 1))
+        setXdata(xvalues)
+        setYdata(yvalues)
+    }
 
     useEffect(() => {
 
         async function get_data() {
-            const response = await fetch("https://football.justin-zhai.com/stat?" + new URLSearchParams({
-                    players: player1,
-                    stat: 'RecYds'
-            }).toString())
-            const data = await response.json()
-            
-            update_data(data, setXdata, setYdata)
+            if (stat && (players.length !== 0)) {
+                const response = await fetch("https://football.justin-zhai.com/stat?" + new URLSearchParams({
+                        players: players,
+                        stat: stat
+                }).toString())
+                const data = await response.json()
+
+                update_data(data)
+            } else {
+                setXdata([])
+                setYdata([])
+            }
+        
         }
 
         get_data()
     })
     return (
         <>
-        <Selector setP1={setPlayer1} />
+        <Selector players={players} setPlayers={setPlayers} setStat={setStat}/>
             <LineChart
-                xAxis={[{ data: xdata }]}
-                series={[
-                    {
-                    data: ydata,
-                    },
-                ]}
+                xAxis={[{ 
+                    data: xdata,  
+                    scaleType: 'time',
+                    tickNumber: 5,
+                    valueFormatter: (date) => date.getFullYear().toString(),
+                }]}
+                series={
+                    Object.keys(ydata).map( key => {
+                        return { data: ydata[key], label: key}
+                    })
+                }
+                yAxis={[{
+                    min: 0
+                }]}
                 height={600}
             />
         </>

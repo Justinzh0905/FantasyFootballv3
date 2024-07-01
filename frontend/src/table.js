@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, TableContainer,TableHead, TableBody, TableRow, TableCell, TableSortLabel, Box, Toolbar, Button, Container } from '@mui/material';
+import { Table, TableContainer,TableHead, TableBody, TableRow, TableCell, TableSortLabel, Box, Toolbar, Button, Stack } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { styled } from '@mui/material/styles';
 import { positions } from '@mui/system'
@@ -108,7 +108,7 @@ function PositionBar(props) {
         setPos(pos)
     }
     return (
-        <Toolbar variant="dense" sx={{minHeight: 20, height: 20}}>
+        <Toolbar variant="dense">
             {[1,2,3].map( pos => {
                 return (<Button key={pos} onClick={changePos(pos)} size="small"> {pos} </Button>)
             })}
@@ -168,27 +168,26 @@ export default function StatTable() {
 
 
     return (
-        <TableContainer sx={{borderRadius: 2, overflow: 'initial'}}>
-            <Table stickyHeader>   
-            <TableHead sx={{position: 'sticky', top: 64, backgroundColor: 'red'}}>   
-                    <PositionBar pos={pos} setPos={setPos} />     
-                    <SortableTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort}  /> 
-
-            </TableHead>
-            <TableBody>
-                {sortedRows.map(row => {
-                return (
-                    <StyledTableRow key={row.id}>
-                        <TableCell> {row.name} </TableCell>
-                        <TableCell align="right">{row.calories}</TableCell>
-                        <TableCell align="right">{row.fat}</TableCell>
-                        <TableCell align="right">{row.carbs}</TableCell>
-                        <TableCell align="right">{row.protein}</TableCell>
-                        <TableCell align="right">{row.type}</TableCell>
-                    </StyledTableRow>
-                )
-                })}
-            </TableBody>
+        <TableContainer>
+            <PositionBar pos={pos} setPos={setPos} />  
+            <Table>       
+                <TableHead>  
+                        <SortableTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort}  /> 
+                </TableHead>
+                <TableBody>
+                    {sortedRows.map(row => {
+                    return (
+                        <StyledTableRow key={row.id}>
+                            <TableCell> {row.name} </TableCell>
+                            <TableCell align="right">{row.calories}</TableCell>
+                            <TableCell align="right">{row.fat}</TableCell>
+                            <TableCell align="right">{row.carbs}</TableCell>
+                            <TableCell align="right">{row.protein}</TableCell>
+                            <TableCell align="right">{row.type}</TableCell>
+                        </StyledTableRow>
+                    )
+                    })}
+                </TableBody>
             </Table>
         </TableContainer>
     )

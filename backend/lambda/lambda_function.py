@@ -41,7 +41,9 @@ def lambda_handler(event, context):
                 )
 
                 print(response)
-                body[player] = db_json.loads(response["Items"])
+                stats = db_json.loads(response["Items"])
+                stats = {row['Year']: row[event['queryStringParameters']['stat']] for row in stats}
+                body[player] = stats
     except KeyError:
         statusCode = 400
         body = 'Unsupported route: ' + event['routeKey']

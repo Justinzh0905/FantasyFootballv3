@@ -11,14 +11,16 @@ import reportWebVitals from './reportWebVitals';
 
 const router = createBrowserRouter([
   {
-    path: "football", element: <App />,
+    path: "/", element: <App />,
     errorElement: <ErrorPage />,
     children: [
       {path: "rankings", element: <StatTable />},
       {path: "research", element: <GraphView />}
     ]
   }
-])
+], {
+  basename: "/football/"
+})
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
