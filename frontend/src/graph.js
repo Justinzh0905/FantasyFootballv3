@@ -8,37 +8,48 @@ import { Autocomplete, TextField, Grid } from '@mui/material';
 const sample = ['Stefon Diggs', 'Derrick Henry', 'Aaron Jones', 'Aaron Rodgers', 'Josh Allen']
 const stats = ['PPR','TD','G','GS','Cmp','PassAtt','PassYds','PassTD','Int','RushAtt','RushYds','Y/A','RushTD','Tgt','Rec','RecYds','Y/R','RecTD','Fmb','FL','PPR','VBD','PosRank']
 function Selector(props) {
-
+    const { numPlayers, setNumPlayers, players, setPlayers, stat, setStat} = props
     function updatePlayers(pos, value) {
-        let newPlayers = [...props.players]
+        let newPlayers = [...players]
         newPlayers[pos] = value
-        props.setPlayers(newPlayers)
+        newPlayers = newPlayers.filter(x => x !== null)
+        setPlayers(newPlayers)
+
+        
+        if (newPlayers.length === numPlayers && newPlayers.length < 4) {
+            setNumPlayers(numPlayers + 1)
+        } else if (newPlayers.length === numPlayers - 2 && newPlayers.length > 0) {
+            setNumPlayers(numPlayers - 1)
+        }
+
     }
     
     return (
-        <Grid container spacing="1">
-            <Grid item xs={6}>
-                <Autocomplete 
-                    onChange={(e, value) => updatePlayers(0, value)}
-                    options = {sample}
-                    renderInput={(params) => <TextField {...params} label="Player" variant="standard" />}
-                />
+        <Grid container spacing="2">
+            <Grid container xs={12}>
+                {[...Array(numPlayers).keys()].map((i) => {
+                    return (
+                        <Grid item xs={3}>
+                        <Autocomplete 
+                            readOnly={(numPlayers !== i + 2 || players.length === 4) && i !== 3 && numPlayers !==1 && numPlayers !== i + 1}
+                            onChange={(e, value) => updatePlayers(i, value)}
+                            options = {sample}
+                            renderInput={(params) => <TextField {...params} label="Player" variant="standard" />}
+                        />
+                        </Grid>
+                    )
+                })}
             </Grid>
-            <Grid item xs={6}>
-                <Autocomplete 
-                    onChange={(e, value) => updatePlayers(1, value)}
-                    options = {sample}
-                    renderInput={(params) => <TextField {...params} label="Player" variant="standard" />}
-                />
-            </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3}>
                 <Autocomplete 
                     onChange={(e, value) => props.setStat(value)}
                     options = {stats}
                     renderInput={(params) => <TextField {...params} label="Choose Stat" variant="standard"/>}
                 />
             </Grid>
+            
         </Grid>
+
     )
 }
 export default function GraphView() {
@@ -46,6 +57,7 @@ export default function GraphView() {
     const [stat, setStat] = useState('')
     const [xdata, setXdata] = useState([])
     const [ydata, setYdata] = useState({})
+    const [numPlayers, setNumPlayers] = useState(1)
 
     function update_data(json) {
 
@@ -99,7 +111,7 @@ export default function GraphView() {
     })
     return (
         <>
-        <Selector players={players} setPlayers={setPlayers} setStat={setStat}/>
+        <Selector numPlayers={numPlayers} setNumPlayers={setNumPlayers} players={players} setPlayers={setPlayers} setStat={setStat}/>
             <LineChart
                 xAxis={[{ 
                     data: xdata,  
