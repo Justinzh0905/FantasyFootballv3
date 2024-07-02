@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import App from './App';
-import StatTable from './table'
+import Ranking from './table'
 import GraphView from './graph'
 import ErrorPage from './errorpage'
 import reportWebVitals from './reportWebVitals';
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
     path: "/", element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      {path: "rankings", element: <StatTable />},
+      {path: "rankings", element: <Ranking />},
       {path: "research", element: <GraphView />}
     ]
   }],

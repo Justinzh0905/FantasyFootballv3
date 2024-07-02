@@ -5,6 +5,6 @@ import json
 
 client = boto3.client('dynamodb')
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('Player-Rankings')
+table = dynamodb.Table('Player-ADP')
 response = table.scan()
 print('scanned--- /n', response['Items'])

@@ -9,9 +9,18 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-year = datetime.datetime.now().year
+currentTime = datetime.datetime.now()
+year = currentTime.year
 
 stats = []
+
+
+#remove data and rescrape if it is more than three days old 
+for file in ['stats.csv', 'espnADP.csv', 'FRRanking.csv']:
+    mtime = datetime.datetime.fromtimestamp(os.path.getmtime(file))
+
+    if (currentTime - mtime).days > 3:
+        os.remove(file)
 
 #scrape past fantasy data 
 if not os.path.isfile('stats.csv'):
@@ -55,37 +64,13 @@ if not os.path.isfile('stats.csv'):
     df.to_csv('stats.csv')
 
 
-# prototype for accessing player stats locally, not used 
-def player_data(players, stat):
-    if not type(players) is list:
-        players = [players]
-    df = pd.read_csv('stats.csv', index_col=['Player', 'Year'])
-
-    res = {}
-    for player in players:
-        player_stat = df.loc[player, stat].to_dict()
-
-        #fill in blank years with N/A
-        for i in range(year-5, year):
-            if i not in player_stat.keys():
-                player_stat[i] = 'N/A'
-        
-        #sort stats by year
-        sorted_stat = {i: player_stat[i] for i in sorted(list(player_stat.keys()))}
-
-        res[player] = sorted_stat
-
-
-    
-    return json.dumps(res)
-
 
 #scrape current ADP trends from ESPN
-if not os.path.isfile('espnADP.txt'):
+if not os.path.isfile('espnADP.csv'):
     browser = webdriver.Chrome()
     browser.get('https://fantasy.espn.com/football/livedraftresults')
 
-    for i in range(5):
+    for i in range(10):
         try:
             element = WebDriverWait(browser, 10).until(
                 EC.presence_of_element_located((By.CLASS_NAME, 'Table'))
@@ -104,7 +89,6 @@ if not os.path.isfile('espnADP.txt'):
 
         browser.find_element(By.XPATH , "/html/body/div[1]/div[1]/div/div/div[5]/div[2]/div[2]/div/div/div/div[3]/nav/button[2]").click()
 
-if not os.path.isfile('espnADP.csv'):
     with open('espnADP.txt', 'r') as file:
         data = file.read()
 
@@ -134,10 +118,11 @@ if not os.path.isfile('espnADP.csv'):
     df.set_index('Player',inplace=True)
 
     df.to_csv('espnADP.csv')
+    os.remove('espnADP.txt')
 
 
 #scrape expert rankings from FantasyPros
-if not os.path.isfile('FPRankings.txt'):
+if not os.path.isfile('FPRankings.csv'):
     browser = webdriver.Chrome()
     browser.get('https://www.fantasypros.com/nfl/rankings/ppr-cheatsheets.php')
 
@@ -153,21 +138,14 @@ if not os.path.isfile('FPRankings.txt'):
 
     soup = bs(browser.page_source)
 
-    s = str(soup.find('table'))
-
-    with open('FPRankings.txt', 'a') as f:
-        f.write(s)
-
-if not os.path.isfile('FPRankings.csv'):
-    with open('FPRankings.txt', 'r') as file:
-        data = file.read()
+    data = str(soup.find('table'))
 
     df = pd.read_html(data, flavor='bs4')[0]
-
 
     def find_team(string):
         reg = r'(\(\w*\))'
         return re.findall(reg, string)[0]
+    
     df.drop(['WSID', 'SOS SEASON', 'ECR VS. ADP'], axis=1, inplace=True)
 
     df = df[df['RK'].str.contains('^\d')]
