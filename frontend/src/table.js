@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { Table, TableContainer,TableHead, TableBody, TableRow, TableCell, TableSortLabel, Box, Toolbar, Button } from '@mui/material';
-import { visuallyHidden } from '@mui/utils';
+import React, { useState, useEffect} from 'react';
+import { Toolbar, Button } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
@@ -45,23 +44,24 @@ const rows = [
 ];
 
 const columns = [
-    {field: 'name', headerName: 'Name', flex: 1},
-    {field: 'calories', headerName: 'Calories', flex: 1},
-    {field: 'fat', headerName: 'Fat', flex: 1},
-    {field: 'carbs', headerName: 'Carbs', flex: 1},
-    {field: 'protein', headerName: 'Protein', flex: 1},
-    {field: 'type', headerName: 'Type', flex: 1}
+    {field: 'Player', headerName: 'Player', flex: 2},
+    {field: 'TM', headerName: 'Team', flex: 1},
+    {field: 'RK', headerName: 'Rank', flex: 1, valueGetter: (value, row) => Number(row.RK)},
+    {field: 'POS', headerName: 'Position', flex: 1},
+    {field: 'Pos Rank', headerName: 'Position Rank', flex: 1},
+    {field: 'BYE WEEK', headerName: 'Bye Week', flex: 1, valueGetter: (value, row) => Number(row["BYE WEEK"])},
 ]
 
+const positions = ['Overall', 'QB', 'RB', 'WR', 'TE']
 function PositionBar(props) {
-    const {pos, setPos} = props;
+    const {setPos} = props;
 
     const changePos = (pos) => (event) => {
         setPos(pos)
     }
     return (
         <Toolbar variant="dense">
-            {[1,2,3].map( pos => {
+            {positions.map( pos => {
                 return (<Button key={pos} onClick={changePos(pos)} size="small"> {pos} </Button>)
             })}
         </Toolbar>
@@ -70,18 +70,29 @@ function PositionBar(props) {
 
 export default function StatTable() {
 
-    const [pos, setPos] = React.useState(1)
+    const [pos, setPos] = useState('Overall')
+    const [rankings, setRankings] = useState([])
+    const loading = rankings.length === 0
+    const filteredRows = rankings.filter( elem => (pos === elem.POS || pos === 'Overall'))
 
-    const filteredRows = rows.filter( elem => pos === elem.type || pos === 1)
+    useEffect(() => {
+        async function get_rankings() {
+            const response = await fetch('https://api.justin-zhai.com/ranking')
+            const data = await response.json()
+            setRankings(data['Ranking'].filter(elem => elem['BYE WEEK'] !== '-').sort((a, b) => Number(a.RK) - Number(b.RK)))
+        }
 
-
+        get_rankings()
+    }, [])
     return (
         <StripedDataGrid 
             rows={filteredRows}
             columns={columns}
             autoHeight={true}
-            hideFooter={true}
+            hideFooter={false}
+            getRowId={(row) => row.Player}
             disableColumnMenu={true}
+            loading={loading}
             getRowClassName={(params) =>
                 params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
               }
@@ -90,7 +101,6 @@ export default function StatTable() {
             }}
             slotProps={{
                 toolbar: {
-                    pos: pos,
                     setPos: setPos
                 }
             }}

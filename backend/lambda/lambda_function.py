@@ -5,7 +5,7 @@ import json
 
 client = boto3.client('dynamodb')
 dynamodb = boto3.resource('dynamodb')
-table = dynamodb.Table('Player-Stats')
+
 
 
 def lambda_handler(event, context):
@@ -13,9 +13,9 @@ def lambda_handler(event, context):
     print(event)
     body = {}
     statusCode = 200
-
     try:
         if event['routeKey'] == "GET /stat":
+            table = dynamodb.Table('Player-Stats')
             players = event['queryStringParameters']['players'].split(',')
             print('query string: ' ', '.join(players))
             
@@ -32,7 +32,7 @@ def lambda_handler(event, context):
                 for player in players:
                     response =  table.query(
                         KeyConditionExpression=Key('Player').eq(player),
-                        ProjectionExpression=f'#y, {event['queryStringParameters']['stat']}',
+                        ProjectionExpression=f"#y, {event['queryStringParameters']['stat']}",
                         ExpressionAttributeNames = {'#y': 'Year'}
                     )
 
@@ -40,6 +40,11 @@ def lambda_handler(event, context):
                     stats = db_json.loads(response["Items"])
                     stats = {row['Year']: row[event['queryStringParameters']['stat']] for row in stats}
                     body[player] = stats
+        elif event['routeKey'] == "GET /ranking":
+            print('here')
+            table = dynamodb.Table('Player-Rankings')
+            response = table.scan()
+            body['Rankings'] = db_json.loads(response['Items'])
     except KeyError:
         statusCode = 400
         body = 'Unsupported route: ' + event['routeKey']

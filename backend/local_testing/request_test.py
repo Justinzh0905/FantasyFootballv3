@@ -13,3 +13,5 @@ payload = {
 
 print(requests.get('https://api.justin-zhai.com/stat', params=payload).text)
 
+print(requests.get('https://api.justin-zhai.com/ranking').text)
+

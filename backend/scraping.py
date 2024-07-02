@@ -174,7 +174,8 @@ if not os.path.isfile('FPRankings.csv'):
     df.rename(columns={'Player Name': 'Player'}, inplace=True)
     df['TM'] = df['Player'].map(lambda x: find_team(x).strip('()'))
     df['Player'] = df['Player'].map(lambda x: x.replace(find_team(x), '').strip())
-
+    df['Pos Rank'] = df['POS'].map(lambda x: x[len(x.rstrip('0123456789')):])
+    df['POS'] = df['POS'].map(lambda x: x.rstrip('0123456789'))
     df.set_index('Player',inplace=True)
 
     df.to_csv('FPRankings.csv')

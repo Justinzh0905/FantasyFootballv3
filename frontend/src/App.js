@@ -26,7 +26,7 @@ function HomeBlurb() {
   return (
     <p>
       Welcome to my fantasy football website <br /> <br />
-      click rankings to see my rankings, or use the research tab to compare past player performance <br /> <br />
+      Click rankings to see my rankings, or use the research tab to compare past player performance <br /> <br />
       This page will be updated soon with my methodology for rankings
     </p>
   )
