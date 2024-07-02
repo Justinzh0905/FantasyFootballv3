@@ -1,17 +1,19 @@
 import * as React from 'react';
 import { Table, TableContainer,TableHead, TableBody, TableRow, TableCell, TableSortLabel, Box, Toolbar, Button } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
+import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+
+
+const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
+  [`& .${gridClasses.row}.even`]: {
+        backgroundColor: theme.palette.grey[200]
     },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
+    "& .MuiDataGrid-row:hover": {
+        backgroundColor: alpha(theme.palette.primary.light,0.2)
+    }
 }));
 
 function createData(id, name, calories, fat, carbs, protein, type) {
@@ -42,63 +44,14 @@ const rows = [
     createData(13, 'Oreo', 437, 18.0, 63, 4.0, 1),
 ];
 
-const headCells = [
-    {
-        id: 'name',
-        numeric: false,
-        disablePadding: true,
-        label: 'Dessert (100g serving)',
-    },
-    {
-        id: 'calories',
-        numeric: true,
-        disablePadding: false,
-        label: 'Calories',
-    },
-    {
-        id: 'fat',
-        numeric: true,
-        disablePadding: false,
-        label: 'Fat (g)',
-    },
-    {
-        id: 'carbs',
-        numeric: true,
-        disablePadding: false,
-        label: 'Carbs (g)',
-    },
-    {
-        id: 'protein',
-        numeric: true,
-        disablePadding: false,
-        label: 'Protein (g)',
-    },
-    {   id: 'type', 
-        numeric: true,
-        disablePadding: true,
-        label: 'type (1-3)'
-    }
-];
-
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-    return array.slice().sort(comparator)
-}
+const columns = [
+    {field: 'name', headerName: 'Name', flex: 1},
+    {field: 'calories', headerName: 'Calories', flex: 1},
+    {field: 'fat', headerName: 'Fat', flex: 1},
+    {field: 'carbs', headerName: 'Carbs', flex: 1},
+    {field: 'protein', headerName: 'Protein', flex: 1},
+    {field: 'type', headerName: 'Type', flex: 1}
+]
 
 function PositionBar(props) {
     const {pos, setPos} = props;
@@ -115,79 +68,32 @@ function PositionBar(props) {
     )
 }
 
-function SortableTableHead(props) {
-    const {order, orderBy, onRequestSort} =
-        props;
-    const createSortHandler = (property) => (event) => {
-        onRequestSort(event, property);
-    };
-
-    return (
-        <TableRow variant="dense">
-        {headCells.map((headCell) => (
-            <TableCell
-                key={headCell.id}
-                align={headCell.numeric ? 'right' : 'left'}
-                padding={headCell.disablePadding ? 'none' : 'normal'}
-                sortDirection={orderBy === headCell.id ? order : false}
-            >
-                <TableSortLabel
-                    active={orderBy === headCell.id}
-                    direction={orderBy === headCell.id ? order : 'asc'}
-                    onClick={createSortHandler(headCell.id)}
-                >
-
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                    <Box component="span" sx={visuallyHidden}>
-                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                    </Box>
-                ) : null}
-                </TableSortLabel>
-            </TableCell>
-            ))}
-        </TableRow>
-    )
-}
-
-
 export default function StatTable() {
-    const [order, setOrder] = React.useState('asc')
-    const [orderBy, setOrderBy] = React.useState('calories')
+
     const [pos, setPos] = React.useState(1)
 
-    const handleRequestSort = (event, property) => {
-        // flip sort direction or default to asc if the orderBy changed
-        const currAsc = orderBy === property && order === 'asc';
-        setOrder(currAsc ? 'desc': 'asc')
-        setOrderBy(property);
-    }
-
-    const sortedRows = stableSort(rows, getComparator(order, orderBy)).filter( elem => pos === elem.type || pos === 1)
+    const filteredRows = rows.filter( elem => pos === elem.type || pos === 1)
 
 
     return (
-        <TableContainer>
-            <PositionBar pos={pos} setPos={setPos} />  
-            <Table>       
-                <TableHead>  
-                        <SortableTableHead order={order} orderBy={orderBy} onRequestSort={handleRequestSort}  /> 
-                </TableHead>
-                <TableBody>
-                    {sortedRows.map(row => {
-                    return (
-                        <StyledTableRow key={row.id}>
-                            <TableCell> {row.name} </TableCell>
-                            <TableCell align="right">{row.calories}</TableCell>
-                            <TableCell align="right">{row.fat}</TableCell>
-                            <TableCell align="right">{row.carbs}</TableCell>
-                            <TableCell align="right">{row.protein}</TableCell>
-                            <TableCell align="right">{row.type}</TableCell>
-                        </StyledTableRow>
-                    )
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <StripedDataGrid 
+            rows={filteredRows}
+            columns={columns}
+            autoHeight={true}
+            hideFooter={true}
+            disableColumnMenu={true}
+            getRowClassName={(params) =>
+                params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+              }
+            slots={{
+                toolbar: PositionBar
+            }}
+            slotProps={{
+                toolbar: {
+                    pos: pos,
+                    setPos: setPos
+                }
+            }}
+        />
     )
 }

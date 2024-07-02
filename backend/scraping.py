@@ -115,14 +115,14 @@ if not os.path.isfile('espnADP.csv'):
     def find_team(string):
         postfix = string[-3:]
         index = next(pos for pos,char in enumerate(postfix) if char.isupper())
-        return postfix[index:].upper()
+        return postfix[index:]
 
     columns = list(df.columns)
     columns[-2] = 'DELETE'
     df.columns = columns
     df['POS'] = df['Player'].map(lambda name: name[-2:])
     df['Player'] = df['Player'].map(lambda name: name[:-2].replace('Q',''))
-    df['TM'] = df['Player'].map(find_team)
+    df['TM'] = df['Player'].map(lambda x: find_team(x).upper())
     df['Player'] = df['Player'].map(lambda x: x.replace(find_team(x),''))
     df.drop(['AVG SALARY', 'DELETE'],axis=1, inplace=True)
 
