@@ -1,5 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { Toolbar, Button, Divider, Tabs, Tab, TabScrollButton } from '@mui/material';
+import { Toolbar, Button, Divider, Tabs, Tab, Typography, Box, Link} from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 
@@ -119,9 +119,20 @@ export default function Ranking() {
             </Tabs>
 
             <div hidden={currentTab !== 0}>
+                <Box p={2}>
+                    <Typography align='left'>
+                        Draft rankings based on a mixture of data analytics/projections, expert consesus opinion, and ADP. Exact methodology will be added on the home page in the future.
+                    </Typography>
+                </Box>
                 <StatTable get_data={get_rankings} columns={ranking_columns}/>
             </div>
             <div hidden={currentTab !== 1}>
+                <Box p={2}>
+                    <Typography align='left'>
+                        Average Draft Position (ADP) data based on draft trends on ESPN. This data represents how fantasy players as a whole are actually valuing and drafting players.
+                        Consesus from this large amount of players can constitute as <Link underline='hover' target='_blank' href='https://en.wikipedia.org/wiki/Wisdom_of_the_crowd' rel="noopener"> wisdom of the crowd </Link>, which could be more accurate than opinions of experts. 
+                    </Typography>
+                </Box>
                 <StatTable get_data={get_adp} columns={adp_columns}/>
             </div>
         </>

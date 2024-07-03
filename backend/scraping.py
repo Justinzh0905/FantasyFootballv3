@@ -8,6 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 currentTime = datetime.datetime.now()
 year = currentTime.year
@@ -16,7 +17,7 @@ stats = []
 
 
 #remove data and rescrape if it is more than three days old 
-for file in ['stats.csv', 'espnADP.csv', 'FRRanking.csv']:
+for file in ['stats.csv', 'FPRankings.csv']:
     mtime = datetime.datetime.fromtimestamp(os.path.getmtime(file))
 
     if (currentTime - mtime).days > 3:
@@ -70,7 +71,8 @@ if not os.path.isfile('espnADP.csv'):
     browser = webdriver.Chrome()
     browser.get('https://fantasy.espn.com/football/livedraftresults')
 
-    for i in range(10):
+    for i in range(8):
+        time.sleep(5)
         try:
             element = WebDriverWait(browser, 10).until(
                 EC.presence_of_element_located((By.CLASS_NAME, 'Table'))
