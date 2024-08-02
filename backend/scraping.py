@@ -17,11 +17,12 @@ stats = []
 
 
 #remove data and rescrape if it is more than three days old 
-for file in ['stats.csv', 'FPRankings.csv']:
-    mtime = datetime.datetime.fromtimestamp(os.path.getmtime(file))
+for file in ['stats.csv', 'FPRankings.csv', 'espnADP.csv']:
+    if os.path.isfile(file):
+        mtime = datetime.datetime.fromtimestamp(os.path.getmtime(file))
 
-    if (currentTime - mtime).days > 3:
-        os.remove(file)
+        if (currentTime - mtime).days > 3:
+            os.remove(file)
 
 #scrape past fantasy data 
 if not os.path.isfile('stats.csv'):
@@ -57,7 +58,7 @@ if not os.path.isfile('stats.csv'):
         stats.append(df)
 
     df = pd.concat(stats, ignore_index=True)
-
+    df['Player'] = df['Player'].str.replace(' Jr.', '')
     df.set_index(['Player', 'Year'], inplace=True)
     #df.sort_index(level=0, inplace=True)
 
@@ -110,6 +111,7 @@ if not os.path.isfile('espnADP.csv'):
     df['Player'] = df['Player'].map(lambda name: name[:-2].replace('Q',''))
     df['TM'] = df['Player'].map(lambda x: find_team(x).upper())
     df['Player'] = df['Player'].map(lambda x: x.replace(find_team(x),''))
+    df['Player'] = df['Player'].str.replace(' Jr.', '')
     df.drop(['AVG SALARY', 'DELETE'],axis=1, inplace=True)
 
     cols = list(df.columns) 
@@ -156,6 +158,7 @@ if not os.path.isfile('FPRankings.csv'):
     df['Player'] = df['Player'].map(lambda x: x.replace(find_team(x), '').strip())
     df['Pos Rank'] = df['POS'].map(lambda x: x[len(x.rstrip('0123456789')):])
     df['POS'] = df['POS'].map(lambda x: x.rstrip('0123456789'))
+    df['Player'] = df['Player'].str.replace(' Jr.', '')
     df.set_index('Player',inplace=True)
 
     df.to_csv('FPRankings.csv')

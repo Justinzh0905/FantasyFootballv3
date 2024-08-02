@@ -16,9 +16,11 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 const ranking_columns = [
     {field: 'Player', headerName: 'Player', flex: 2},
     {field: 'TM', headerName: 'Team', flex: 1},
-    {field: 'RK', headerName: 'Rank', flex: 1, valueGetter: (value, row) => Number(row.RK)},
+    {field: 'Age', headerName: 'Age', flex: 1},
+    {field: 'Composite Rank', headerName: 'Rank', flex: 1, valueGetter: (value, row) => Number(row['Composite Rank'])},
     {field: 'POS', headerName: 'Position', flex: 1},
-    {field: 'Pos Rank', headerName: 'Position Rank', flex: 1},
+    {field: 'ECR', headerName: 'Expert Consess Rank', flex: 1, valueGetter: (value, row) => Number(row.ECR)},
+    {field: 'Vs. Expert', headerNmae: 'Vs. Expert', flex: 1, valueGetter: (value, row) => Number(row['Vs. Expert'])},
     {field: 'BYE WEEK', headerName: 'Bye Week', flex: 1, valueGetter: (value, row) => Number(row["BYE WEEK"])},
 ]
 
@@ -54,7 +56,7 @@ function PositionBar(props) {
 async function get_rankings() {
     const response = await fetch('https://api.justin-zhai.com/ranking')
     let data = await response.json()
-    data = data['Rankings'].filter(elem => elem['BYE WEEK'] !== '-').sort((a, b) => Number(a.RK) - Number(b.RK))
+    data = data['Rankings'].filter(elem => elem['BYE WEEK'] !== '-').sort((a, b) => Number(a['Composite Rank']) - Number(b['Composite Rank']))
 
     return data
 }
