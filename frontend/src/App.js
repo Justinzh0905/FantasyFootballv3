@@ -1,8 +1,11 @@
 import './App.css';
 import * as React from 'react';
-import { AppBar, Toolbar, Typography, Button, Box, Paper, Table, TableHead, TableBody, TableCell, TableRow, TableContainer, tableCellClasses} from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, Box, Paper, Table, TableHead, TableBody, TableCell, TableRow, TableContainer, tableCellClasses, Grid} from '@mui/material';
 import { useOutlet, Link} from 'react-router-dom';
 import { styled } from '@mui/material/styles';
+import { BarChart } from '@mui/x-charts/BarChart';
+import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -140,8 +143,85 @@ function HomeBlurb() {
         <Typography variant='h3' gutterBottom> Age </Typography>
         <p>
           Of course this data shows past performance, and as the saying goes "Past performance is no guarantee of future results."
+          This is especially relevant in football, where players have incredibly short careers. Often players will "hit a wall" and decline 
+          out of nowhere when they get older. So it is important to pinpoint player's best performing years. 
           <br /><br />
-          To be continued...
+          So here is the number of top 15 finishes by age in the last 5 years:
+        </p>
+
+        <Grid container >
+            <Grid sm={12} md={6} sx={{textAlign: 'center'}}>
+              QB
+              <BarChart
+                series={[
+                  { data: [5, 13, 17, 17, 9, 9, 9, 10, 3, 6, 6, 11, 6, 6, 5, 4, 6, 2, 2, 1, 1, 1, 1] },
+                ]}
+                height={290}
+                yAxis={[{ label: '# of Players' }]}
+                xAxis={[{ data: [22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44] , scaleType: 'band', label: 'Age', labelStyle: {
+                  // Move the x-axis label with style
+                  transform: 'translateY(-5px)',
+                } }]}
+                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+              />
+            </Grid>
+            <Grid sm={12} md={6} sx={{textAlign: 'center'}}>
+              RB
+              <BarChart
+                series={[
+                  { data: [8, 17, 21, 23, 20, 21, 16, 12, 4, 5, 1, 1, 1] },
+                ]}
+                height={290}
+                yAxis={[{ label: '# of Players' }]}
+                xAxis={[{ data: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33] , scaleType: 'band', label: 'Age', labelStyle: {
+                  // Move the x-axis label with style
+                  transform: 'translateY(-5px)',
+                } }]}
+                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+              />
+            </Grid>
+            <Grid sm={12} md={6} sx={{textAlign: 'center'}}>
+              WR
+              <BarChart
+                series={[
+                  { data: [4, 9, 16, 14, 15, 22, 20, 17, 13, 9, 6, 2, 2, 1] },
+                ]}
+                height={290}
+                yAxis={[{ label: '# of Players' }]}
+                xAxis={[{ data: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34] , scaleType: 'band', label: 'Age', labelStyle: {
+                  // Move the x-axis label with style
+                  transform: 'translateY(-5px)',
+                } }]}
+                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+              />
+            </Grid>
+            <Grid sm={12} md={6} sx={{textAlign: 'center'}}>
+              TE
+              <BarChart
+                series={[
+                  { data: [1, 2, 6, 15, 18, 24, 14, 16, 12, 8, 10, 10, 4, 4, 3, 1, 2] },
+                ]}
+                height={290}
+                yAxis={[{ label: '# of Players' }]}
+                xAxis={[{ data: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37] , scaleType: 'band', label: 'Age', labelStyle: {
+                  // Move the x-axis label with style
+                  transform: 'translateY(-5px)',
+                } }]}
+                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+              />
+            </Grid>
+        </Grid>
+
+        <p>
+          This data confirms several trends of modern football. 
+          <br /><br />
+          First, it seems that running backs regress very fast, in fact the decline starts at age 24. Nowadays runningbacks are cheap and easy to replace, 
+          so teams simply run their young runningbacks to thr ground. So beware of 27+ year old running backs. It takes truly generation runningbacks like Christian McCaffrey to break this trend. 
+          <br /><br />
+          The same could be said for wide receivers, the sheer althetism needed to be a wide receiver means that you quickly regress statistically once you lose a step.
+          Wide receivers are good for a little bit longer than runningbacks, but you should still be wary of drafting any receivers aged 29+. 
+          <br /><br />
+          to be continued...
         </p>
       </Box>
     </>
