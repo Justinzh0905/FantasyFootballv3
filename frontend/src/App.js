@@ -87,7 +87,7 @@ function HomeBlurb() {
         Welcome to my fantasy football website <br /> <br />
         Click rankings to see my rankings, or use the research tab to compare past player performance <br /> <br />
         This page is slowing being updated with my ranking methodology along with graphs and insights I've seen <br /> <br />
-        last updated 8/5/24
+        last updated 8/8/24
       </p>
       <br />
       <Box sx={{textAlign: 'left'}}>
@@ -213,14 +213,111 @@ function HomeBlurb() {
         </Grid>
 
         <p>
-          This data confirms several trends of modern football. 
-          <br /><br />
-          First, it seems that running backs regress very fast, in fact the decline starts at age 24. Nowadays runningbacks are cheap and easy to replace, 
+          This data confirms several trends of modern football:
+        </p>
+        <ul>
+          <li>
+          <b>Quarterback:</b>
+          There is an abundance of young, high performing quarterbacks. There has been a huge influx of talent at quarterback. As a result, teams are letting rookie quarterbacks take reign of the offense as soon as possible rather
+          than letting them develop on the bench. In addition, it is increasing common to see dual threat quarterbacks that can run and score rushing touchdowns. This means that some young quarterbacks have been putting up huge numbers in recent years.
+          But these young rushing quarterbacks tend to run less as they age, reducing their upside. The general trend seems to be the elite producing quarterbacks are young but you are generally safe to pick any quarterbacks until about age 33/34+.  
+          </li>
+          <br />
+          <li>
+          <b>Runningback:</b>
+          The data comfirms that running backs regress very fast, in fact the decline starts at age 24. Nowadays runningbacks are cheap and easy to replace, 
           so teams simply run their young runningbacks to thr ground. So beware of 27+ year old running backs. It takes truly generation runningbacks like Christian McCaffrey to break this trend. 
-          <br /><br />
+          </li>
+          <br />
+          <li>
+          <b>Wide Receiver:</b>
           The same could be said for wide receivers, the sheer althetism needed to be a wide receiver means that you quickly regress statistically once you lose a step.
           Wide receivers are good for a little bit longer than runningbacks, but you should still be wary of drafting any receivers aged 29+. 
-          <br /><br />
+          </li>
+          <br />
+          <li>
+          <b>Tightend:</b>
+          Lastly, tight ends fare a bit better than runningbacks and wide receiver as they get older. This is likely due to the fact that tight ends rely on their size and less on game breaking speed. 
+          </li>
+        </ul>
+
+        <br /><br /><br />
+
+        <p>
+        To verify these trends I looked at the stats in another way. I compiled the average points per game of the top 5 (top 3 for quarterbacks) performing player by age in each position for the past 5 years.
+        </p>
+        <Grid container >
+            <Grid sm={12} md={6} sx={{textAlign: 'center'}}>
+              QB
+              <BarChart
+                series={[
+                  { data: [10.287293956043955, 15.450023252890901, 18.106518009768013, 18.033435257552906, 18.11473199594523, 17.718560606060606, 18.04591230936819, 14.346400129690572, 15.46485379000085, 15.965284090909089, 18.504722222222224, 15.951704545454545, 14.824912464985994, 15.213202614379085, 13.777777777777777] },
+                ]}
+                height={290}
+                yAxis={[{ label: '# of Players' }]}
+                xAxis={[{ data: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35] , scaleType: 'band', label: 'Age', labelStyle: {
+                  // Move the x-axis label with style
+                  transform: 'translateY(-5px)',
+                } }]}
+                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+              />
+            </Grid>
+            <Grid sm={12} md={6} sx={{textAlign: 'center'}}>
+              RB
+              <BarChart
+                series={[
+                  { data: [12.86104503775092, 13.82029466122113, 13.215612066365006, 13.595151290865997, 11.998006017022192, 10.917832815713698, 10.768295809582575, 8.414473589319178, 14.109826923076923] },
+                ]}
+                height={290}
+                yAxis={[{ label: '# of Players' }]}
+                xAxis={[{ data: [22, 23, 24, 25, 26, 27, 28, 29, 30] , scaleType: 'band', label: 'Age', labelStyle: {
+                  // Move the x-axis label with style
+                  transform: 'translateY(-5px)',
+                } }]}
+                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+              />
+            </Grid>
+            <Grid sm={12} md={6} sx={{textAlign: 'center'}}>
+              WR
+              <BarChart
+                series={[
+                  { data: [10.988445451607216, 11.956152780063075, 13.608887389571214, 13.785604997453527, 13.766342619635271, 14.718802285949346, 13.794875193923724, 12.872283941548647, 12.472224288238994, 10.712571143842151, 9.61257792501616, 10.678074175824175, 9.981333333333334] },
+                ]}
+                height={290}
+                yAxis={[{ label: '# of Players' }]}
+                xAxis={[{ data: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33] , scaleType: 'band', label: 'Age', labelStyle: {
+                  // Move the x-axis label with style
+                  transform: 'translateY(-5px)',
+                } }]}
+                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+              />
+            </Grid>
+            <Grid sm={12} md={6} sx={{textAlign: 'center'}}>
+              TE
+              <BarChart
+                series={[
+                  { data: [5.859780748663101, 4.848207706509178, 6.75394553338818, 7.790921162171162, 8.4181054332922, 6.763649988247048, 6.776523996101937, 6.0330099569548095, 5.064633431694356, 7.004708333333335, 7.5405] },
+                ]}
+                height={290}
+                yAxis={[{ label: '# of Players' }]}
+                xAxis={[{ data: [22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] , scaleType: 'band', label: 'Age', labelStyle: {
+                  // Move the x-axis label with style
+                  transform: 'translateY(-5px)',
+                } }]}
+                margin={{ top: 10, bottom: 40, left: 40, right: 10 }}
+              />
+            </Grid>
+        </Grid>
+
+        <p>
+          The same trend is generally present when the data is presented this way. So age is very import factor to consider when projecting player performance. 
+          Players tend to improve for the first few years and then hit their prime for 2-3 years before they begin declining. So I adjusted the VBD ranking by projecting young players outside 
+          the observed 2-3 year prime to improve and older players to decline. The decline is incrementing, with players projected to decline more the further they are from their prime. 
+
+          <br /> <br />
+          Here is the ranking after adjustment based on age:
+
+          <br />
           to be continued...
         </p>
       </Box>
