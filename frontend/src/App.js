@@ -4,8 +4,6 @@ import { AppBar, Toolbar, Typography, Button, Box, Paper, Table, TableHead, Tabl
 import { useOutlet, Link} from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -28,7 +26,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
+function createVBDData(
   rank,
   player,
   position,
@@ -38,28 +36,61 @@ function createData(
   return { rank, player, position, age, vbd };
 }
 
-const rows = [
-  createData(1,'Christian McCaffrey','RB',28,8.323809523809524),
-  createData(2,'Josh Allen','QB',28,7.247863247863248),
-  createData(3,'CeeDee Lamb','WR',25,5.966101694915254),
-  createData(4,'Tyreek Hill','WR',30,6.556521739130435),
-  createData(5,'Jalen Hurts','QB',26,5.283185840707965),
-  createData(6,'Nick Chubb','RB',29,4.642857142857143),
-  createData(7,'Derrick Henry','RB',30,4.62962962962963),
-  createData(8,'Justin Jefferson','WR',25,3.879120879120879),
-  createData(9,'Sam LaPorta','TE',23,3.823529411764706),
-  createData(10,'Amon-Ra St. Brown','WR',25,3.672566371681416),
-  createData(11,'Travis Kelce','TE',35,4.2),
-  createData(12,'Kyren Williams','RB',24,3.588235294117647),
-  createData(13,'Patrick Mahomes','QB',29,3.7217391304347824),
-  createData(14,'Puka Nacua','WR',23,3.5294117647058822),
-  createData(15,'Davante Adams','WR',32,3.7796610169491527),
-  createData(16,'A.J. Brown','WR',27,3.356521739130435),
-  createData(17,'Dak Prescott','QB',31,3.2685185185185186),
-  createData(18,'Joe Mixon','RB',28,3.4285714285714284),
-  createData(19,'Mike Evans','WR',31,3.5701754385964914),
-  createData(20,'Deebo Samuel','WR',28,3.2941176470588234),
+function createAgeData(
+  rank,
+  player,
+  position,
+  age,
+) {
+  return { rank, player, position, age};
+}
+
+
+const VBDRows = [
+  createVBDData(1,'Christian McCaffrey','RB',28,8.323809523809524),
+  createVBDData(2,'Josh Allen','QB',28,7.247863247863248),
+  createVBDData(3,'Tyreek Hill','WR',30,6.556521739130435),
+  createVBDData(4,'CeeDee Lamb','WR',25,5.966101694915254),
+  createVBDData(5,'Jalen Hurts','QB',26,5.283185840707965),
+  createVBDData(6,'Nick Chubb','RB',29,4.642857142857143),
+  createVBDData(7,'Derrick Henry','RB',30,4.62962962962963),
+  createVBDData(8,'Travis Kelce','TE',35,4.2),
+  createVBDData(9,'Justin Jefferson','WR',25,3.879120879120879),
+  createVBDData(10,'Sam LaPorta','TE',23,3.823529411764706),
+  createVBDData(11,'Davante Adams','WR',32,3.7796610169491527),
+  createVBDData(12,'Patrick Mahomes','QB',29,3.7217391304347824),
+  createVBDData(13,'Amon-Ra St. Brown','WR',25,3.672566371681416),
+  createVBDData(14,'Kyren Williams','RB',24,3.588235294117647),
+  createVBDData(15,'Mike Evans','WR',31,3.5701754385964914),
+  createVBDData(16,'Puka Nacua','WR',23,3.5294117647058822),
+  createVBDData(17,'Raheem Mostert','RB',32,3.4408602150537635),
+  createVBDData(18,'Joe Mixon','RB',28,3.4285714285714284),
+  createVBDData(19,'Austin Ekeler','RB',29,3.358490566037736),
+  createVBDData(20,'A.J. Brown','WR',27,3.356521739130435),
 ];
+
+const AgeRows = [
+  createAgeData(1,'Christian McCaffrey','RB',28,8.323809523809524),
+  createAgeData(2,'Josh Allen','QB',28,7.247863247863248),
+  createAgeData(3,'CeeDee Lamb','WR',25,5.966101694915254),
+  createAgeData(4,'Tyreek Hill','WR',30,6.556521739130435),
+  createAgeData(5,'Jalen Hurts','QB',26,5.283185840707965),
+  createAgeData(6,'Nick Chubb','RB',29,4.642857142857143),
+  createAgeData(7,'Derrick Henry','RB',30,4.62962962962963),
+  createAgeData(8,'Justin Jefferson','WR',25,3.879120879120879),
+  createAgeData(9,'Sam LaPorta','TE',23,3.823529411764706),
+  createAgeData(10,'Amon-Ra St. Brown','WR',25,3.672566371681416),
+  createAgeData(11,'Travis Kelce','TE',35,4.2),
+  createAgeData(12,'Kyren Williams','RB',24,3.588235294117647),
+  createAgeData(13,'Patrick Mahomes','QB',29,3.7217391304347824),
+  createAgeData(14,'Puka Nacua','WR',23,3.5294117647058822),
+  createAgeData(15,'Davante Adams','WR',32,3.7796610169491527),
+  createAgeData(16,'A.J. Brown','WR',27,3.356521739130435),
+  createAgeData(17,'Dak Prescott','QB',31,3.2685185185185186),
+  createAgeData(18,'Joe Mixon','RB',28,3.4285714285714284),
+  createAgeData(19,'Mike Evans','WR',31,3.5701754385964914),
+  createAgeData(20,'Deebo Samuel','WR',28,3.2941176470588234),
+]
 
 function NavBar() {
 
@@ -87,7 +118,7 @@ function HomeBlurb() {
         Welcome to my fantasy football website <br /> <br />
         Click rankings to see my rankings, or use the research tab to compare past player performance <br /> <br />
         This page is slowing being updated with my ranking methodology along with graphs and insights I've seen <br /> <br />
-        last updated 8/8/24
+        last updated 8/11/24
       </p>
       <br />
       <Box sx={{textAlign: 'left'}}>
@@ -127,7 +158,7 @@ function HomeBlurb() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {VBDRows.map((row) => (
                 <StyledTableRow key={row.rank}>
                   <StyledTableCell component="th" scope="row">{row.rank}</StyledTableCell>
                   <StyledTableCell> {row.player}</StyledTableCell>
@@ -316,9 +347,35 @@ function HomeBlurb() {
 
           <br /> <br />
           Here is the ranking after adjustment based on age:
+        </p>
+        <TableContainer component={Box} sx={{display: 'flex', justifyContent: 'center'}}>
+          <Table size="small" sx={{width: '90%'}}> 
+            <TableHead>
+              <TableRow>
+                <StyledTableCell sx={{borderRadius: '10px 0px 0px 0px'}}> Rank</StyledTableCell>
+                <StyledTableCell> Player</StyledTableCell>
+                <StyledTableCell align="right"> Position</StyledTableCell>
+                <StyledTableCell align="right" sx={{borderRadius: '0px 10px 0px 0px'}}> Age</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {AgeRows.map((row) => (
+                <StyledTableRow key={row.rank}>
+                  <StyledTableCell component="th" scope="row">{row.rank}</StyledTableCell>
+                  <StyledTableCell> {row.player}</StyledTableCell>
+                  <StyledTableCell align="right">{row.position}</StyledTableCell>
+                  <StyledTableCell align="right">{row.age}</StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table >
+        </TableContainer>
 
-          <br />
-          to be continued...
+        <p>
+          One thing to notice is that quarterbacks are very high in this ranking, but in real life they are not drafted as high. 
+
+          <br /><br />
+          To be continued...
         </p>
       </Box>
     </>
