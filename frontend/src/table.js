@@ -14,10 +14,10 @@ const StripedDataGrid = styled(DataGrid)(({ theme }) => ({
 }));
 
 const ranking_columns = [
+    {field: 'Composite Rank', headerName: 'Rank', flex: 1, valueGetter: (value, row) => Number(row['Composite Rank'])},
     {field: 'Player', headerName: 'Player', flex: 2},
     {field: 'TM', headerName: 'Team', flex: 1},
     {field: 'Age', headerName: 'Age', flex: 1},
-    {field: 'Composite Rank', headerName: 'Rank', flex: 1, valueGetter: (value, row) => Number(row['Composite Rank'])},
     {field: 'POS', headerName: 'Position', flex: 1},
     {field: 'ECR', headerName: 'Expert Consess Rank', flex: 1, valueGetter: (value, row) => Number(row.ECR)},
     {field: 'Vs. Expert', headerNmae: 'Vs. Expert', flex: 1, valueGetter: (value, row) => Number(row['Vs. Expert'])},
@@ -25,11 +25,11 @@ const ranking_columns = [
 ]
 
 const adp_columns = [
+    {field: 'Rank', headerName: 'Rank', flex: 1, valueGetter: (value, row) => Number(row.Rank)},
+    {field: 'AVG PICK', headerName: 'ADP', flex: 1, valueGetter: (value, row) => Number(row['AVG PICK'])},
     {field: 'Player', headerName: 'Player', flex: 2},
     {field: 'TM', headerName: 'Team', flex: 1},
     {field: 'POS', headerName: 'Position', flex: 1},
-    {field: 'Rank', headerName: 'Rank', flex: 1, valueGetter: (value, row) => Number(row.Rank)},
-    {field: 'AVG PICK', headerName: 'ADP', flex: 1, valueGetter: (value, row) => Number(row['AVG PICK'])},
     {field: '7 DAY +/-', headerName: '7 DAY +/-', flex: 1,  valueGetter: (value, row) => Number(row['7 DAY +/-'])},
     {field: '%ROST', headerName: 'Percent Rostered', flex: 1, valueGetter: (value, row) => Number(row["%ROST"])},
 ]
