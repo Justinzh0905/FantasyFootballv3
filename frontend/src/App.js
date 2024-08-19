@@ -118,7 +118,7 @@ function HomeBlurb() {
         Welcome to my fantasy football website <br /> <br />
         Click rankings to see my rankings, or use the research tab to compare past player performance <br /> <br />
         This page is slowing being updated with my ranking methodology along with graphs and insights I've seen <br /> <br />
-        last updated 8/11/24
+        last updated 8/19/24
       </p>
       <br />
       <Box sx={{textAlign: 'left'}}>
@@ -372,11 +372,29 @@ function HomeBlurb() {
         </TableContainer>
 
         <p>
-          One thing to notice is that quarterbacks are very high in this ranking, but in real life they are not drafted as high. 
-
+          One thing to notice is that quarterbacks are very high in this ranking, much higher than what experts would rank quarterbacks. This is due to two reasons: 
           <br /><br />
-          To be continued...
+          The first is that Quarterbacks have become a more important posiiton than years past. Quarterbacks have become more important than ever in the NFL. Teams are leveraging talented quarterbacks and
+          putting the ball in their hands whenever they can. So elite quarterbacks are passing the ball more often and also running with the ball more often. Since elite quarterbacks can 
+          now carry entire offenses like never before, the gap between elite quarterbacks and a replacement level quarterback is higher than ever. 
+          <br /><br />
+          The second reason is that there is a flaw in the way value over replacement in calculated. There are usually flex positions on a fantasy team. So managers usually start more than the 
+          standard 2RB and 2WR. This means that a true replacement level player from the bench is worse than what calculation currently uses. So the value over replacement of non-QB players should be higher. This will be changed in 
+          the future, I am currently working on a way to account for flex players. 
+          <br /><br />
+          But nonetheless, I do support the notion that quarterbacks are underrated. Josh Allen last year score 8ppg more than the 10th best QB. To put that into perspective, Christian McCaffrey
+          scored 8ppg more than the 10th best RB. So Josh Allen provided the same advantage as the biggest cheat code in the past decade of fantasy football. Yet Christian McCaffrey was drafted around
+          second overall last year while Josh Allen was a late second/third round pick.
         </p>
+        <Typography variant='h3' gutterBottom> Expert Adjustments </Typography>
+        <p>
+          Although studying past stats and using value over replacement is great, it does not take into account developments that can happen during the off-season. Things like injuries, retirements,
+          team changes, coaching changes, and more could all happen. I certainty don't want a player on my rankings that actually announced they are retiring last month.
+          These things are reflected in rankings from expert but not in past data. So to account for this I aggregrated the expert consesus rankings on Fantasy Pros. 
+          <br /><br />
+          To be continued..
+        </p>
+
       </Box>
     </>
   )
