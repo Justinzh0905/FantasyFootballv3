@@ -118,7 +118,7 @@ function HomeBlurb() {
         Welcome to my fantasy football website <br /> <br />
         Click rankings to see my rankings, or use the research tab to compare past player performance <br /> <br />
         This page is slowing being updated with my ranking methodology along with graphs and insights I've seen <br /> <br />
-        last updated 8/19/24
+        last updated 9/15/24
       </p>
       <br />
       <Box sx={{textAlign: 'left'}}>
@@ -392,7 +392,8 @@ function HomeBlurb() {
           team changes, coaching changes, and more could all happen. I certainty don't want a player on my rankings that actually announced they are retiring last month.
           These things are reflected in rankings from expert but not in past data. So to account for this I aggregrated the expert consesus rankings on Fantasy Pros. 
           <br /><br />
-          To be continued..
+          Here is top ranking players of the final composite ranking. Use the rankings tab to view the complete rankings. 
+
         </p>
 
       </Box>
